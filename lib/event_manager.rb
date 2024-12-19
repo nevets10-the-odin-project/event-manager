@@ -18,14 +18,19 @@ def clean_phone_number(number)
   end
 end
 
-def format_time(string)
-  month = string.split('/')[0].rjust(2, '0')
-  day = string.split('/')[1].rjust(2, '0')
-  year = "20#{string.split('/')[2][0..1]}"
-  hour = string.split[1].split(':')[0].rjust(2, '0')
-  min = string.split[1].split(':')[1].rjust(2, '0')
+def format_time(regdate)
+  formatted = []
+  regdate.each do |row|
+    month = row.split('/')[0].rjust(2, '0')
+    day = row.split('/')[1].rjust(2, '0')
+    year = "20#{row.split('/')[2][0..1]}"
+    hour = row.split[1].split(':')[0].rjust(2, '0')
+    min = row.split[1].split(':')[1].rjust(2, '0')
 
-  Time.new("#{year}-#{month}-#{day} #{hour}:#{min}:00")
+    formatted << Time.new("#{year}-#{month}-#{day} #{hour}:#{min}:00")
+  end
+
+  formatted
 end
 
 def count_hours(times)
@@ -37,14 +42,12 @@ def count_hours(times)
 end
 
 def get_peak_hours(regdate)
-  reg_times = []
-  regdate.each do |row|
-    reg_times << format_time(row)
-  end
-
+  reg_times = format_time(regdate)
   hours = count_hours(reg_times)
-
   hours.filter { |hour, count| count == hours.values.max }.keys
+end
+
+def get_peek_days(regdate)
 end
 
 def legislators_by_zipcode(zip)
@@ -85,6 +88,7 @@ erb_template = ERB.new template_letter
 
 regdate = contents.map { |row| row[:regdate] }
 peak_hours = get_peak_hours(regdate)
+peak_days = get_peek_days(regdate)
 
 p peak_hours
 
