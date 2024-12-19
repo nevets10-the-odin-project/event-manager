@@ -33,29 +33,21 @@ def format_time(regdate)
   formatted
 end
 
-def count_hours(times)
-  times.each_with_object({}) do |cur, acc|
-    acc[cur.hour.to_s] = acc.has_key?(cur.hour.to_s) ? acc[cur.hour.to_s] += 1 : 1
-
-    acc
-  end
-end
-
-def get_peak_hours(regdate)
-  reg_times = format_time(regdate)
-  hours = count_hours(reg_times)
-  hours.filter { |hour, count| count == hours.values.max }.keys
-end
-
-def count_days(days)
+def count_records(days)
   days.each_with_object({}) do |cur, acc|
     acc[cur] = acc.key?(cur) ? acc[cur] += 1 : 1
   end
 end
 
+def get_peak_hours(regdate)
+  reg_times = format_time(regdate).map { |time| time.hour.to_s }
+  hours = count_records(reg_times)
+  hours.filter { |hour, count| count == hours.values.max }.keys
+end
+
 def get_peek_days(regdate)
   reg_days = format_time(regdate).map { |date| date.strftime('%A') }
-  day_count = count_days(reg_days)
+  day_count = count_records(reg_days)
   day_count.filter { |day, count| count == day_count.values.max }.keys
 end
 
@@ -99,6 +91,7 @@ regdate = contents.map { |row| row[:regdate] }
 peak_hours = get_peak_hours(regdate)
 peak_days = get_peek_days(regdate)
 
+p peak_hours
 p peak_days
 
 contents.each do |row|
