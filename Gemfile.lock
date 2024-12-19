@@ -63,7 +63,7 @@ PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
-  google-apis-civicinfo_v2
+  google-apis-civicinfo_v2 (~> 0.24.0)
 
 BUNDLED WITH
    2.5.23
