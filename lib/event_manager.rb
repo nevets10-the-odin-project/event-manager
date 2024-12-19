@@ -47,7 +47,16 @@ def get_peak_hours(regdate)
   hours.filter { |hour, count| count == hours.values.max }.keys
 end
 
+def count_days(days)
+  days.each_with_object({}) do |cur, acc|
+    acc[cur] = acc.key?(cur) ? acc[cur] += 1 : 1
+  end
+end
+
 def get_peek_days(regdate)
+  reg_days = format_time(regdate).map { |date| date.strftime('%A') }
+  day_count = count_days(reg_days)
+  day_count.filter { |day, count| count == day_count.values.max }.keys
 end
 
 def legislators_by_zipcode(zip)
@@ -90,7 +99,7 @@ regdate = contents.map { |row| row[:regdate] }
 peak_hours = get_peak_hours(regdate)
 peak_days = get_peek_days(regdate)
 
-p peak_hours
+p peak_days
 
 contents.each do |row|
   id = row[0]
